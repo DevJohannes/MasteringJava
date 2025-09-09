@@ -1,6 +1,9 @@
-package de.appiqstudios.cachesystem.core;
+package de.appiqstudios.cachesystem.core.builtin;
 
+import de.appiqstudios.cachesystem.cache.IStorage;
+import de.appiqstudios.cachesystem.cache.builtin.Storage;
 import de.appiqstudios.cachesystem.commands.CommandHandler;
+import de.appiqstudios.cachesystem.core.IClientHandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,9 +13,9 @@ import java.net.Socket;
 import java.util.UUID;
 
 /*
-* The ClientHandler class handles communication with a connected client.
-* It implements Runnable to allow handling each client in a separate thread.
-*/
+ * The builtin ClientHandler class handles communication with a connected client.
+ * It extends the IClientHandler abstract class and implements the Runnable interface
+ */
 public class ClientHandler extends IClientHandler implements Runnable {
 
     private Socket socket;
@@ -21,14 +24,17 @@ public class ClientHandler extends IClientHandler implements Runnable {
     private final UUID clientId;
     private CommandHandler commandHandler;
     private final Server server;
+    private IStorage storage;
 
-    public ClientHandler(Server server, Socket socket, UUID clientId) throws IOException {
-        super(socket, clientId);
+    public ClientHandler(Server server, Socket socket, UUID clientId, Storage storage) throws IOException {
+        super(socket, clientId, storage);
         this.socket = socket;
         this.clientId = clientId;
         this.server = server;
+        this.storage = storage;
 
-        this.commandHandler = new CommandHandler(server, socket);
+        this.out = new PrintWriter(socket.getOutputStream(), true);
+        this.commandHandler = new CommandHandler(server, socket, out, this);
     }
 
     @Override
@@ -62,4 +68,7 @@ public class ClientHandler extends IClientHandler implements Runnable {
         }
     }
 
+    public IStorage getStorage() {
+        return storage;
+    }
 }
