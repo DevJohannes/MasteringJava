@@ -1,6 +1,7 @@
-package de.appiqstudios.cachesystem.commands;
+package de.appiqstudios.cachesystem.commands.builtin;
 
-import de.appiqstudios.cachesystem.core.Server;
+import de.appiqstudios.cachesystem.commands.Command;
+import de.appiqstudios.cachesystem.core.builtin.Server;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -9,14 +10,13 @@ import java.net.Socket;
 public class InfoCommand extends Command {
     private final Server server;
     private final Socket socket;
+    private final PrintWriter out;
 
-    private PrintWriter out;
-
-    public InfoCommand(Server server, Socket socket) throws IOException {
-        super("INFO", socket);
+    public InfoCommand(Server server, Socket socket, PrintWriter out) throws IOException {
+        super("INFO", server, socket, out);
         this.server = server;
         this.socket = socket;
-        this.out = new PrintWriter(socket.getOutputStream(), true);
+        this.out = out;
     }
 
     @Override
