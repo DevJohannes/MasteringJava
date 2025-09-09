@@ -1,6 +1,6 @@
 package de.appiqstudios.cachesystem;
 
-import de.appiqstudios.cachesystem.core.Server;
+import de.appiqstudios.cachesystem.core.builtin.Server;
 
 public class Main {
 
